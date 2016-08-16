@@ -62,9 +62,9 @@ var requestHandler = function(request, response) {
 
   if (request.method === 'POST') {
     var body = '';
+    statusCode = 201;
     request.on('data', function(chunk) {
       body += chunk;
-      statusCode = 201;
     });
     request.on('end', function() {
       var parsedMessage = JSON.parse(body);
