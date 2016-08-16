@@ -3,7 +3,8 @@ var app = {
 
   //TODO: The current 'toggleFriend' function just toggles the class 'friend'
   //to all messages sent by the user
-  server: 'https://api.parse.com/1/classes/messages/',
+  //server: 'https://api.parse.com/1/classes/messages/',
+   server: 'http://127.0.0.1:3000/classes/messages',
   username: 'anonymous',
   roomname: 'lobby',
   lastMessageId: 0,
@@ -29,7 +30,7 @@ var app = {
     app.fetch(false);
 
     // Poll for new messages
-    setInterval(app.fetch, 3000);
+    // setInterval(app.fetch, 3000);
   },
 
   send: function(data) {
@@ -46,6 +47,7 @@ var app = {
       success: function (data) {
         // Trigger a fetch to update the messages, pass true to animate
         app.fetch();
+
       },
       error: function (data) {
         console.error('chatterbox: Failed to send message', data);
@@ -68,7 +70,7 @@ var app = {
         var displayedRoom = $('.chat span').first().data('roomname');
         app.stopSpinner();
         // Only bother updating the DOM if we have a new message
-        if (mostRecentMessage.objectId !== app.lastMessageId || app.roomname !== displayedRoom) {
+        // if (mostRecentMessage.objectId !== app.lastMessageId || app.roomname !== displayedRoom) {
           // Update the UI with the fetched rooms
           app.populateRooms(data.results);
 
@@ -77,7 +79,7 @@ var app = {
 
           // Store the ID of the most recent message
           app.lastMessageId = mostRecentMessage.objectId;
-        }
+        // }
       },
       error: function(data) {
         console.error('chatterbox: Failed to fetch messages');

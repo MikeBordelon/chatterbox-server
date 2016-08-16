@@ -11,8 +11,10 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
+  var messages = [];
 
 var requestHandler = function(request, response) {
+  //console.log(response);
   // Request and Response come from node's http module.
   //
   // They include information about both the incoming request, such as
@@ -27,7 +29,62 @@ var requestHandler = function(request, response) {
   // Adding more logging to your server can be an easy way to get passive
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
+  // debugger;
+
+    var testData = {
+  results: [{
+  createdAt: 
+  "2016-08-15T22:27:45.744Z", 
+  objectId: "PIydphVV0c", 
+  roomname: "lobby", 
+  text: "Ima psybeam the recursion out of ya", 
+  updatedAt: "2016-08-15T22:27:45.744Z",
+  username: "slowking"
+  }]
+  };
+
+  if (messages.length === 0) {
+    //messages.push(testData.results[0]);    
+  }
+
+  console.log('our substring: ', request.url.substring(0, 17));
+
+  if (!(request.url.substring(0, 17) === '/classes/messages')) {
+    var statusCode = 404;
+    var headers = defaultCorsHeaders;
+    console.log("hello");
+    headers['Content-Type'] = 'application/json';  
+    response.writeHead(statusCode, headers);
+    response.end(JSON.stringify({results: messages}));
+
+  }
+
+
+  if (request.method === 'POST') {
+    var body = '';
+    request.on('data', function(chunk) {
+      body += chunk;
+    });
+    request.on('end', function() {
+      var parsedMessage = JSON.parse(body);
+
+      parsedMessage.createdAt = null;
+      parsedMessage.objectId = null;
+      parsedMessage.roomname = null;
+      parsedMessage.updatedAt = null;
+      messages.push(parsedMessage);
+    
+    // res.writeHead(200);
+    // res.end(JSON.stringify(data));
+      console.log(JSON.stringify(messages));
+    });
+  }
+
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
+  
+
+
+  //console.log(JSON.stringify(response.socket.Socket.parser.HTTPParser.incoming));
 
   // The outgoing status.
   var statusCode = 200;
@@ -39,7 +96,9 @@ var requestHandler = function(request, response) {
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = 'text/plain';
+  
+  headers['Content-Type'] = 'application/json';
+  //headers['Content-Type'] = 'text/plain';
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
@@ -52,7 +111,10 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  response.end('Testing our new asdfasdf');
+
+  console.log("at the end", response.statusCode);
+
+  response.end(JSON.stringify({results: messages}));
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
