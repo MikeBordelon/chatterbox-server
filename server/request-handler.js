@@ -1,5 +1,4 @@
-  var uuid = require('node-uuid');
-  var shortid = require('shortid');
+
   var idgen = require('idgen');
 
 /*************************************************************
