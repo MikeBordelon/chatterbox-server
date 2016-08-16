@@ -31,28 +31,28 @@ var requestHandler = function(request, response) {
   // console.logs in your code.
   // debugger;
 
-    var testData = {
-  results: [{
-  createdAt: 
-  "2016-08-15T22:27:45.744Z", 
-  objectId: "PIydphVV0c", 
-  roomname: "lobby", 
-  text: "Ima psybeam the recursion out of ya", 
-  updatedAt: "2016-08-15T22:27:45.744Z",
-  username: "slowking"
-  }]
+  var testData = {
+    results: [{
+      createdAt: '2016-08-15T22:27:45.744Z', 
+      objectId: 'PIydphVV0c', 
+      roomname: 'lobby', 
+      text: 'Ima psybeam the recursion out of ya', 
+      updatedAt: '2016-08-15T22:27:45.744Z',
+      username: 'slowking'
+    }]
   };
 
   if (messages.length === 0) {
     //messages.push(testData.results[0]);    
   }
 
+  var statusCode = 200;
   console.log('our substring: ', request.url.substring(0, 17));
 
   if (!(request.url.substring(0, 17) === '/classes/messages')) {
     var statusCode = 404;
     var headers = defaultCorsHeaders;
-    console.log("hello");
+    console.log('hello');
     headers['Content-Type'] = 'application/json';  
     response.writeHead(statusCode, headers);
     response.end(JSON.stringify({results: messages}));
@@ -64,6 +64,7 @@ var requestHandler = function(request, response) {
     var body = '';
     request.on('data', function(chunk) {
       body += chunk;
+      statusCode = 201;
     });
     request.on('end', function() {
       var parsedMessage = JSON.parse(body);
@@ -74,7 +75,6 @@ var requestHandler = function(request, response) {
       parsedMessage.updatedAt = null;
       messages.push(parsedMessage);
     
-    // res.writeHead(200);
     // res.end(JSON.stringify(data));
       console.log(JSON.stringify(messages));
     });
@@ -87,7 +87,6 @@ var requestHandler = function(request, response) {
   //console.log(JSON.stringify(response.socket.Socket.parser.HTTPParser.incoming));
 
   // The outgoing status.
-  var statusCode = 200;
 
   // See the note below about CORS headers.
   var headers = defaultCorsHeaders;
@@ -112,7 +111,7 @@ var requestHandler = function(request, response) {
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
 
-  console.log("at the end", response.statusCode);
+  console.log('at the end', response.statusCode);
 
   response.end(JSON.stringify({results: messages}));
 };
@@ -126,11 +125,11 @@ var requestHandler = function(request, response) {
 //
 // Another way to get around this restriction is to serve you chat
 // client from this domain by setting up static file serving.
-var defaultCorsHeaders = {
-  'access-control-allow-origin': '*',
-  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'access-control-allow-headers': 'content-type, accept',
-  'access-control-max-age': 10 // Seconds.
-};
+  var defaultCorsHeaders = {
+    'access-control-allow-origin': '*',
+    'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'access-control-allow-headers': 'content-type, accept',
+    'access-control-max-age': 10 // Seconds.
+  };
 
-exports.requestHandler = requestHandler;
+  exports.requestHandler = requestHandler;
